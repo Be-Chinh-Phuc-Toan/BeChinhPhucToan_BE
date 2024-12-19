@@ -14,6 +14,6 @@ namespace BeChinhPhucToan_BE.Models
 
         public Administrator? Administrator { get; set; }
         public Parent? Parent { get; set; }
-        public ICollection<Feedback>? Feedbacks { get; set; }
+        //public ICollection<Feedback>? Feedbacks { get; set; }
     }
 }

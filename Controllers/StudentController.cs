@@ -28,6 +28,7 @@ namespace BeChinhPhucToan_BE.Controllers
         [HttpGet("{parentEmail}")]
         public async Task<ActionResult<Student>> getStudent(string parentEmail)
         {
+            var decodeEmail = Uri.UnescapeDataString(parentEmail);
             var student = await _context.Students
                 .Include(s => s.Parent)
                 .FirstOrDefaultAsync(s => s.Parent.email == parentEmail);
