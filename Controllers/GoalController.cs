@@ -20,7 +20,9 @@ namespace BeChinhPhucToan_BE.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Goal>>> getAllGoals()
         {
-            var goals = await _context.Goals.ToListAsync();
+            var goals = await _context.Goals
+                .Include(g => g.Student)
+                .ToListAsync();
             return Ok(goals);
         }
 
