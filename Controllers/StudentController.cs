@@ -39,9 +39,9 @@ namespace BeChinhPhucToan_BE.Controllers
 
         //// Post add student 
         [HttpPost]
-        public async Task<ActionResult<Student>> addUser([FromBody] Student student)
+        public async Task<ActionResult<Student>> addStudent([FromBody] Student student)
         {
-            var newStudent = await _context.Students.FindAsync(student.fullName);
+            var newStudent = await _context.Students.FirstOrDefaultAsync(s => s.fullName == student.fullName);
             if (newStudent is null)
             {
                 _context.Students.Add(student);
@@ -52,94 +52,54 @@ namespace BeChinhPhucToan_BE.Controllers
 
             return BadRequest(new { message = "Tên của bé đã được đăng ký!" });
         }
-        //[HttpPost]
-        //public async Task<ActionResult<Student>> addStudent([FromBody] Student student)
-        //{
-        //    if(student == null)
-        //    {
-        //        return BadRequest(new { message = "Student data is required" });
-        //    }
-        //    try
-        //    {
-        //        _context.Students.Add(student);
-        //        await _context.SaveChangesAsync();
-        //        return CreatedAtAction(nameof(getStudent), new { parentPhone = student.parentPhone }, student);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while adding the student ", detail = ex.Message});
-        //    }
+        //// Get student by studentId
+        [HttpGet("id/{studentId}")]
+        public async Task<ActionResult<Student>> getStudentById(int studentId)
+        {
+            var student = await _context.Students.FindAsync(studentId);
+            if (student == null)
+            {
+                return NotFound(new { message = "Không tìm thấy học sinh!" });
+            }
+            return Ok(student);
+        }
 
-        //}
-        //// Put update data for id
-        //[HttpPut("{id}")]
-        //public async Task<ActionResult<Student>> updateStudent(int id, [FromBody] Student updateStudent)
-        //{
-        //    if(updateStudent == null || id != updateStudent.id)
-        //    {
-        //        return BadRequest(new { message = "Invalid student data or ID mismatch" });
-        //    }
-        //    try 
-        //    {
-        //        var existingStudent = await _context.Students.FindAsync(id);
-        //        if(existingStudent == null)
-        //        {
-        //            return NotFound(new { message = "Student not found" });
-        //        }
-        //        existingStudent.fullName = updateStudent.fullName;
-        //        existingStudent.image = updateStudent.image;
-        //        existingStudent.dateOfBirth = updateStudent.dateOfBirth;
-        //        existingStudent.grade = updateStudent.grade;
-        //        existingStudent.parentPhone = updateStudent.parentPhone;
-        //        _context.Students.Update(existingStudent);
-        //        await _context.SaveChangesAsync();
-        //        return Ok(existingStudent);
-        //    }
-        //    catch (Exception ex) 
-        //    {
-        //        return StatusCode(StatusCodes.Status500InternalServerError, new {message = "An error occurred while updating the student", detail = ex.Message });
-        //    }
-        //}
-        //// Delete student for id
-        //[HttpDelete("{id}")]
-        //public async Task<ActionResult> deleteStudent(int id)
-        //{
-        //    try
-        //    {
-        //        var student = await _context.Students.FindAsync(id);
-        //        if(student == null)
-        //        {
-        //            return NotFound(new { message = "Student not found" });
-        //        }
-        //        _context.Students.Remove(student);
-        //        await _context.SaveChangesAsync();
-        //        return Ok(new { message = "Student delete successfull" });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while deleting the student", detail = ex.Message });
-        //    }
-        //}
-        //// Filter student for grade
-        //[HttpGet("filterbygrade/{grade}")]
-        //public async Task<ActionResult<List<Student>>> getStudentByGrade(int grade)
-        //{
-        //    try
-        //    {
-        //        var students = await _context.Students.Where(s => s.grade == grade).ToListAsync();
-        //        if(students == null || students.Count == 0)
-        //        {
-        //            return NotFound(new { message = "NO student found for the given grade." });
-        //        }
-        //        return Ok(students);
-        //    }catch(Exception ex)
-        //    {
-        //        return StatusCode(StatusCodes.Status500InternalServerError, new
-        //        {
-        //            message = "An error occourred while fetching the students.",
-        //            detail = ex.Message
-        //        });
-        //    }
-        //}
+        //// Update student information
+        [HttpPut("{studentId}")]
+        public async Task<ActionResult> updateStudent(int studentId, [FromBody] Student updatedStudent)
+        {
+            var student = await _context.Students.FindAsync(studentId);
+            if (student == null)
+            {
+                return NotFound(new { message = "Không tìm thấy học sinh!" });
+            }
+
+            student.fullName = updatedStudent.fullName;
+            student.image = updatedStudent.image;
+            student.dateOfBirth = updatedStudent.dateOfBirth;
+            student.grade = updatedStudent.grade;
+            student.Setting = updatedStudent.Setting;
+
+            _context.Students.Update(student);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Cập nhật thành công!" });
+        }
+
+        //// Delete student by studentId
+        [HttpDelete("{studentId}")]
+        public async Task<ActionResult> deleteStudent(int studentId)
+        {
+            var student = await _context.Students.FindAsync(studentId);
+            if (student == null)
+            {
+                return NotFound(new { message = "Không tìm thấy học sinh!" });
+            }
+
+            _context.Students.Remove(student);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Xóa thành công!" });
+        }
     }
 }

@@ -63,6 +63,15 @@ namespace BeChinhPhucToan_BE.Controllers
 
             return BadRequest(new { message = "Email đã được đăng ký!" });
         }
+        [HttpGet("{id}")]
+        public async Task<ActionResult<User>> getUserById(string id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user is null)
+                return NotFound(new { message = "Người dùng không tồn tại!" });
+
+            return Ok(user);
+        }
 
         //[HttpPut("{phoneNumber}")]
         //public async Task<ActionResult<User>> updateUser([FromBody] User newInfo)
