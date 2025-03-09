@@ -55,6 +55,12 @@ namespace BeChinhPhucToan_BE.Data
         //public DbSet<Comment> Comments { get; set; }
         public DbSet<NotifyUser> NotifyUsers { get; set; }
         public DbSet<Purchase> Purchases { get; set; }
+        public DbSet<GoalStatus> GoalStatus { get; set; }
+        public DbSet<Operations> Operations { get; set; }
+        public DbSet<StudentBadge> StudentBadges { get; set; }
+        public DbSet<StudentReward> StudentRewards { get; set; }
+
+
         //public DbSet<JoinGroup> JoinGroups { get; set; }
         //public DbSet<NotifyStudent> NotifyStudents { get; set; }
 

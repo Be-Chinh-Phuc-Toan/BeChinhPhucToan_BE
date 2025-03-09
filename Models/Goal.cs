@@ -15,7 +15,9 @@ namespace BeChinhPhucToan_BE.Models
         public DateTime dateStart { get; set; }
         public DateTime dateEnd { get; set; }
         public int numberLesson { get; set; }
-        public int badgeID { get; set; }        
+        public int badgeID { get; set; }
         public int reward { get; set; }
+        public int statusID { get; set; }
+        public GoalStatus? GoalStatus { get; set; }
     }
 }

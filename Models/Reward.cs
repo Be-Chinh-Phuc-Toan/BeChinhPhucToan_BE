@@ -9,8 +9,5 @@
         public double point { get; set; }
         public bool isAvailable { get; set; }
 
-        public int studentID { get; set; }
-        public Student? Student { get; set; }
-
     }
 }
