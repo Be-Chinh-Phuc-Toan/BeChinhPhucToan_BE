@@ -126,5 +126,35 @@ namespace BeChinhPhucToan_BE.Controllers
 
             return Ok(new { message = "Deleted successfully!" });
         }
+        [HttpGet("student/{id}")]
+        public async Task<ActionResult<IEnumerable<object>>> GetGoalsByStudentId(int id)
+        {
+            var goals = await _context.Goals
+                .Where(g => g.studentID == id)
+                .Include(g => g.GoalStatus)
+                .Include(g => g.LessonType)
+                .ToListAsync();
+
+            if (!goals.Any())
+                return NotFound(new { message = "No goals found for this student!" });
+
+            var result = goals.Select(g => new
+            {
+                g.id,
+                g.studentID,
+                g.lessonTypeID,
+                LessonTypeName = g.LessonType != null ? g.LessonType.name : null,
+                g.dateStart,
+                g.dateEnd,
+                g.numberLesson,
+                g.badgeID,
+                g.reward,
+                g.statusID,
+                StatusName = g.GoalStatus != null ? g.GoalStatus.name : null,
+            });
+
+            return Ok(result);
+        }
+
     }
 }

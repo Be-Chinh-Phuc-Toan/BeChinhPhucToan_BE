@@ -54,7 +54,18 @@ namespace BeChinhPhucToan_BE.Controllers
 
             return Ok(lessonTypes);
         }
+        [HttpGet("{id}")]
+        public async Task<ActionResult<LessonType>> GetLessonTypeById(int id)
+        {
+            var lessonType = await _context.LessonTypes
+                                 .Include(lt => lt.Operation)
+                                 .FirstOrDefaultAsync(lt => lt.id == id);
 
+            if (lessonType == null)
+                return NotFound(new { message = $"Không tìm thấy LessonType với ID {id}!" });
+
+            return Ok(lessonType);
+        }
 
     }
 }

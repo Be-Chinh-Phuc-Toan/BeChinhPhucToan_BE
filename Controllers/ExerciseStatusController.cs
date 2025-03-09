@@ -41,5 +41,29 @@ namespace BeChinhPhucToan_BE.Controllers
                 return StatusCode(500, new { message = "Đã có lỗi xảy ra!" });
             }            
         }
+        [HttpPut("UpdateByStudentAndExercise")]
+        public async Task<ActionResult> updateExerciseStatus(int studentID, int exerciseID, [FromBody] ExerciseStatus updatedStatus)
+        {
+            try
+            {
+                var existingStatus = await _context.ExerciseStatuses
+                    .FirstOrDefaultAsync(es => es.studentID == studentID && es.exerciseID == exerciseID);
+
+                if (existingStatus == null)
+                {
+                    return NotFound(new { message = "Không tìm thấy trạng thái bài tập!" });
+                }
+
+                existingStatus.point = updatedStatus.point;
+                existingStatus.isComplete = updatedStatus.isComplete;
+
+                await _context.SaveChangesAsync();
+                return Ok(new { message = "Cập nhật thành công!" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Đã có lỗi xảy ra!" });
+            }
+        }
     }
 }

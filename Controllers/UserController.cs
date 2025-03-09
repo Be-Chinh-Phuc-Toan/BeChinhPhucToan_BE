@@ -72,44 +72,23 @@ namespace BeChinhPhucToan_BE.Controllers
 
             return Ok(user);
         }
+        [HttpPut("{id}")]
+        public async Task<ActionResult<User>> updateUser(string id, [FromBody] User updatedUser)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user is null)
+                return NotFound(new { message = "Người dùng không tồn tại!" });
 
-        //[HttpPut("{phoneNumber}")]
-        //public async Task<ActionResult<User>> updateUser([FromBody] User newInfo)
-        //{
-        //    try
-        //    {
-        //        var user = await _context.Users.FindAsync(newInfo.phoneNumber);
-        //        if (user is null)
-        //            return NotFound(new { message = "User is not found!" });
+            // Cập nhật thông tin (chỉ cập nhật nếu có dữ liệu mới)
+            user.FullName = updatedUser.FullName ?? user.FullName;
+            user.Gender = updatedUser.Gender ?? user.Gender;
+            user.DateOfBirth = updatedUser.DateOfBirth ?? user.DateOfBirth;
+            user.Address = updatedUser.Address ?? user.Address;
+            user.UpdatedAt = DateTime.UtcNow; // Cập nhật thời gian sửa đổi
 
-        //        user.password = newInfo.password;
+            await _context.SaveChangesAsync();
+            return Ok(new { message = "Cập nhật thành công!" });
+        }
 
-        //        await _context.SaveChangesAsync();
-
-        //        return Ok(new { message = "Updated successfully!" });
-        //    }
-        //    catch (DbUpdateException ex)
-        //    {
-        //        return ExceptionController.primaryKeyException(ex, "phone number");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An unexpected error occurred." });
-        //    }
-        //}
-
-        //[HttpDelete("{phoneNumber}")]
-        //public async Task<IActionResult> deleteUser(string phoneNumber)
-        //{
-        //    var user = await _context.Users.FindAsync(phoneNumber);
-
-        //    if (user is null)
-        //        return NotFound(new { message = "User is not found!" });
-
-        //    _context.Users.Remove(user);
-        //    await _context.SaveChangesAsync();
-
-        //    return Ok(new { message = "Deleted successfully!" });
-        //}
     }
 }
