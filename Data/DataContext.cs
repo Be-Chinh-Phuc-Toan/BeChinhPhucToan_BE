@@ -59,6 +59,8 @@ namespace BeChinhPhucToan_BE.Data
         public DbSet<Operations> Operations { get; set; }
         public DbSet<StudentBadge> StudentBadges { get; set; }
         public DbSet<StudentReward> StudentRewards { get; set; }
+        public DbSet<Mission> Missions { get; set; }
+        public DbSet<StudentMission> StudentMissions { get; set; }
 
 
         //public DbSet<JoinGroup> JoinGroups { get; set; }
