@@ -12,51 +12,16 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Đọc Connection String từ Environment Variables hoặc từ appsettings.json
-var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING")
-                       ?? builder.Configuration.GetConnectionString("DefaultConnection");
+// Add services to the container.
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
-// Đọc JWT Key từ Environment Variables hoặc từ appsettings.json
-var jwtKey = Environment.GetEnvironmentVariable("JWT_KEY")
-             ?? builder.Configuration["Jwt:Key"];
-
-var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER")
-                ?? builder.Configuration["Jwt:Issuer"];
-
-var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE")
-                  ?? builder.Configuration["Jwt:Audience"];
-
-// Cấu hình kết nối đến cơ sở dữ liệu SQL Server
-builder.Services.AddDbContext<DataContext>(options =>
-{
-    options.UseSqlServer(connectionString);
-});
-
-// Cấu hình xác thực JWT
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
-            ValidIssuer = jwtIssuer,
-            ValidAudience = jwtAudience,
-            ValidateIssuer = true,
-            ValidateAudience = true
-        };
-    });
-
-builder.Services.AddAuthorization();
-
-// Cấu hình các API của Identity (Authentication, Authorization)
-builder.Services.AddIdentityApiEndpoints<User>()
-    .AddEntityFrameworkStores<DataContext>();
 
 // Cấu hình Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
+    // Cấu hình Authorization cho Swagger
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -67,38 +32,68 @@ builder.Services.AddSwaggerGen(options =>
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
 
-// Thêm CORS policy cho phép truy cập từ bất kỳ nguồn nào
+
+// Cấu hình kết nối đến cơ sở dữ liệu SQL Server
+//builder.Services.AddDbContext<DataContext>(options =>
+//{
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+//});
+var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL")
+    ?? builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddDbContext<DataContext>(options =>
+{
+    options.UseSqlServer(connectionString);
+});
+
+
+// Cấu hình xác thực và ủy quyền
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication();
+
+
+// Cấu hình các API của Identity (Authentication, Authorization)
+builder.Services.AddIdentityApiEndpoints<User>()
+    .AddEntityFrameworkStores<DataContext>();
+
+
+builder.Services.AddSingleton<SmsService>(new SmsService("_er7zI1s0rnF7oHFFlNgD1OM_KHaX1Tz"));
+
+
+// Add CORS policy
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
     {
-        policy.AllowAnyOrigin()
-              .AllowAnyMethod()
-              .AllowAnyHeader();
+        policy.AllowAnyOrigin()  // Cho phép mọi nguồn gửi yêu cầu
+              .AllowAnyMethod()  // Cho phép tất cả các phương thức HTTP (GET, POST, PUT, DELETE, ...)
+              .AllowAnyHeader(); // Cho phép tất cả các headers
     });
 });
 
-// Đăng ký SmsService (lưu ý: API Key nên để trong biến môi trường)
-var smsApiKey = Environment.GetEnvironmentVariable("SMS_API_KEY")
-                ?? "_er7zI1s0rnF7oHFFlNgD1OM_KHaX1Tz";  // Thay bằng biến môi trường
-builder.Services.AddSingleton<SmsService>(new SmsService(smsApiKey));
+builder.WebHost.UseUrls("http://0.0.0.0:5016");
 
 var app = builder.Build();
+app.UseCors("AllowAll"); // Thêm dòng này
 
-app.UseCors("AllowAll");
-
-// Nếu đang ở môi trường Development, bật Swagger UI
+// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// Bật xác thực và ủy quyền
+app.MapIdentityApi<User>();
+
+// Enable CORS globally
+app.UseCors("AllowAll");
+
 app.UseAuthentication();
+
+//app.UseHttpsRedirection();
+
 app.UseAuthorization();
 
-app.MapIdentityApi<User>();
 app.MapControllers();
 
 app.Run();
