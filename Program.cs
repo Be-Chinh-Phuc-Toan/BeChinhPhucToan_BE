@@ -47,6 +47,9 @@ builder.Services.AddDbContext<DataContext>(options =>
 });
 
 
+
+
+
 // Cấu hình xác thực và ủy quyền
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication();
