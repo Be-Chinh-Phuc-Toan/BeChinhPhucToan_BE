@@ -77,9 +77,6 @@ if (app.Environment.IsDevelopment())
 
 app.MapIdentityApi<User>();
 
-// Enable CORS globally
-app.UseCors("AllowAll");
-
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
