@@ -3,7 +3,7 @@
 <Project>
   <PropertyGroup>
     <_PublishTargetUrl>D:\Bechinhphuctoan\Backend\BeChinhPhucToan_BE\bin\Release\net9.0\publish\</_PublishTargetUrl>
-    <History>True|2025-03-18T12:28:32.7060685Z||;True|2025-03-18T19:22:39.0379661+07:00||;True|2025-03-18T02:22:25.1417876+07:00||;True|2025-03-18T01:14:05.2696828+07:00||;True|2025-03-18T00:07:36.3976849+07:00||;True|2025-03-17T23:47:04.9993636+07:00||;</History>
+    <History>True|2025-03-20T10:57:02.9360381Z||;True|2025-03-20T16:49:16.2837252+07:00||;True|2025-03-18T23:49:49.8425602+07:00||;True|2025-03-18T19:28:32.7060685+07:00||;True|2025-03-18T19:22:39.0379661+07:00||;True|2025-03-18T02:22:25.1417876+07:00||;True|2025-03-18T01:14:05.2696828+07:00||;True|2025-03-18T00:07:36.3976849+07:00||;True|2025-03-17T23:47:04.9993636+07:00||;</History>
     <LastFailureDetails />
   </PropertyGroup>
 </Project>
