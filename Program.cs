@@ -74,7 +74,8 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.WebHost.UseUrls("http://0.0.0.0:5016");
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5016";
+builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
 var app = builder.Build();
 app.UseCors("AllowAll"); // Thêm dòng này
