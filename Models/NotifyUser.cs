@@ -7,6 +7,7 @@ namespace BeChinhPhucToan_BE.Models
     [PrimaryKey(nameof(userId), nameof(notificationID))]
     public class NotifyUser : BaseEntity
     {
+        [Column(TypeName = "TEXT")]
         public string userId { get; set; }
         public User? User { get; set; }
 

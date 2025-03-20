@@ -26,6 +26,7 @@ namespace BeChinhPhucToan_BE.Data
                     entityType.SetTableName(tableName.Substring(6));
                 }
             }
+
         }
 
         public DbSet<Feedback> Feedbacks { get; set; }
