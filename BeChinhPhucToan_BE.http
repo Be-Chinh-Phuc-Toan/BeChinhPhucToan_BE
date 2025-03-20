@@ -1,6 +1,10 @@
-@BeChinhPhucToan_BE_HostAddress = http://localhost:5016
+# @BeChinhPhucToan_BE_HostAddress = http://localhost:5016
+
+# GET {{BeChinhPhucToan_BE_HostAddress}}/weatherforecast/
+# Accept: application/json
+
+###
+@BeChinhPhucToan_BE_HostAddress = https://bechinhphuctoan.onrender.com
 
 GET {{BeChinhPhucToan_BE_HostAddress}}/weatherforecast/
 Accept: application/json
-
-###

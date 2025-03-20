@@ -13,5 +13,5 @@ RUN dotnet publish "BeChinhPhucToan_BE.csproj" -c Release -o /app/publish
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
 COPY --from=build /app/publish .
+EXPOSE 5016
 ENTRYPOINT ["dotnet", "BeChinhPhucToan_BE.dll"]
-
